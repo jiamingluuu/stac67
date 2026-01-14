@@ -1,6 +1,8 @@
 ---
 title: "STAC67 A1"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2026-01-14"
 ---
 
@@ -8,7 +10,7 @@ date: "2026-01-14"
 
 ## (a)
 
-```{r}
+```{r results='hold'}
 csvFile = "OlympicMarathon2016.csv"
 df <- read.csv(csvFile)
 mu = mean(df[["Minutes"]])
@@ -39,7 +41,7 @@ for (i in 1:sampleCnt) {
 
 ### (b)(i)
 
-```{r}
+```{r results='hold'}
 mean_yBar = mean(yBar)
 var_yBar = var(yBar)
 mean_stats = mean(stats)
@@ -84,13 +86,11 @@ sprintf("===========================")
 sprintf("mean = %f, var = %f", mean_stats, var_stats)
 sprintf("percentiles: ")
 percentiles_stats
-
-
 ```
 
 ### (b) (ii)
 
-```{r}
+```{r results='hold'}
 hist(yBar,
   probability = TRUE,
   main="sampling distribution of yBar",
