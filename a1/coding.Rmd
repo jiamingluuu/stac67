@@ -67,25 +67,29 @@ percentiles_stats = mapply(
   percentiles
 )
 
-sprintf("theoretical values")
-sprintf("==================")
-sprintf("mean = %f, var = %f", mu, sigma2)
-sprintf("percentiles: ")
-percentiles_pop
+cat(
+  sprintf("theoretical values\n"),
+  sprintf("==================\n"),
+  sprintf("mean = %f, var = %f\n", mu, sigma2),
+  sprintf("percentiles:\n"),
+  percentiles_pop
+)
 
-sprintf("")
-sprintf("result of sample means")
-sprintf("======================")
-sprintf("mean = %f, var = %f", mean_yBar, var_yBar)
-sprintf("percentiles: ")
-percentiles_yBar
+cat(
+  sprintf("\n\nresult of sample means\n"),
+  sprintf("======================\n"),
+  sprintf("mean = %f, var = %f\n", mean_yBar, var_yBar),
+  sprintf("percentiles:\n"),
+  percentiles_yBar
+)
 
-sprintf("")
-sprintf("result of scaled sample var")
-sprintf("===========================")
-sprintf("mean = %f, var = %f", mean_stats, var_stats)
-sprintf("percentiles: ")
-percentiles_stats
+cat(
+  sprintf("\n\nresult of scaled sample var\n"),
+  sprintf("===========================\n"),
+  sprintf("mean = %f, var = %f\n", mean_stats, var_stats),
+  sprintf("percentiles:\n"),
+  percentiles_stats
+)
 ```
 
 ### (b) (ii)
