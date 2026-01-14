@@ -1,0 +1,109 @@
+---
+title: "STAC67 A1"
+output: html_document
+date: "2026-01-14"
+---
+
+# Q1
+
+## (a)
+
+```{r}
+csvFile = "OlympicMarathon2016.csv"
+df <- read.csv(csvFile)
+mu = mean(df[["Minutes"]])
+sigma2 = var(df[["Minutes"]])
+sprintf("Minutes has mean %f and variance %f", mu, sigma2)
+```
+
+```{r}
+hist(df[["Minutes"]], xlab="Minutes", main="histogram of the Minutes")
+```
+
+## (b)
+
+```{r}
+set.seed(1008494620)
+population = df[["Minutes"]]
+sampleCnt = 10000
+n = 30
+yBar = numeric(sampleCnt)
+stats = numeric(sampleCnt)
+for (i in 1:sampleCnt) {
+  y = sample(population, size=n, replace=TRUE)
+  yBar[i] = mean(y)
+  s2 = var(y)
+  stats[i] = (n-1) * s2 / sigma2
+}
+```
+
+### (b)(i)
+
+```{r}
+mean_yBar = mean(yBar)
+var_yBar = var(yBar)
+mean_stats = mean(stats)
+var_stats = var(stats)
+
+percentiles = c(0.025, 0.25, 0.5, 0.75, 0.975)
+percentiles_pop = mapply(
+  function(p) {
+    quantile(df[["Minutes"]], p)
+  },
+  percentiles
+)
+percentiles_yBar = mapply(
+  function(p) {
+    quantile(yBar, p)
+  },
+  percentiles
+)
+percentiles_stats = mapply(
+  function(p) {
+    quantile(stats, p)
+  },
+  percentiles
+)
+
+sprintf("theoretical values")
+sprintf("==================")
+sprintf("mean = %f, var = %f", mu, sigma2)
+sprintf("percentiles: ")
+percentiles_pop
+
+sprintf("")
+sprintf("result of sample means")
+sprintf("======================")
+sprintf("mean = %f, var = %f", mean_yBar, var_yBar)
+sprintf("percentiles: ")
+percentiles_yBar
+
+sprintf("")
+sprintf("result of scaled sample var")
+sprintf("===========================")
+sprintf("mean = %f, var = %f", mean_stats, var_stats)
+sprintf("percentiles: ")
+percentiles_stats
+
+
+```
+
+### (b) (ii)
+
+```{r}
+hist(yBar,
+  probability = TRUE,
+  main="sampling distribution of yBar",
+  xlab="yBar",
+)
+x1 = seq(min(yBar), max(yBar), length.out = 500)
+lines(x1, dnorm(x1, mean=mu, sd=sqrt(sigma2/n)), lwd=2)
+
+hist(stats,
+  probability=TRUE,
+  main="sampling distribution of scaled sample variance",
+  xlab=expression(bar(y)),
+)
+x2 = seq(0, max(stats), length.out = 500)
+lines(x2, dchisq(x2, df=n - 1), lwd=2)
+```
