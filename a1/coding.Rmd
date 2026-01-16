@@ -12,7 +12,7 @@ date: "2026-01-14"
 
 ```{r results='hold'}
 csvFile = "OlympicMarathon2016.csv"
-df <- read.csv(csvFile)
+df = read.csv(csvFile)
 mu = mean(df[["Minutes"]])
 sigma2 = var(df[["Minutes"]])
 sprintf("Minutes has mean %f and variance %f", mu, sigma2)
@@ -24,7 +24,7 @@ hist(df[["Minutes"]], xlab="Minutes", main="histogram of the Minutes")
 
 ## (b)
 
-```{r}
+```{r results='hold'}
 set.seed(1008494620)
 population = df[["Minutes"]]
 sampleCnt = 10000
@@ -110,4 +110,122 @@ hist(stats,
 )
 x2 = seq(0, max(stats), length.out = 500)
 lines(x2, dchisq(x2, df=n - 1), lwd=2)
+```
+
+# Q7
+
+## (a)
+
+```{r results='hold'}
+library(ggplot2)
+csvFile = "kidiq.csv"
+df = read.csv(csvFile)
+ggplot(
+  df, 
+  aes(
+    x = mom.iq, 
+    y = kid.score,
+  )
+) + geom_point() + geom_smooth(formula = y~x, method = "lm")
+
+```
+
+## (b)
+
+```{r results='hold'}
+y = df[["kid.score"]]
+x = df[["mom.iq"]]
+fit = lm(y~x, data = df)
+beta0 = fit$coefficients[["(Intercept)"]]
+beta1 = fit$coefficients[["x"]]
+cat(sprintf("beta0 = %f, beta1 = %f", beta0, beta1))
+```
+
+## (c)
+
+```{r results='hold'}
+x_bar = mean(x)
+y_bar = mean(y)
+
+SS_yy = sum((y - y_bar)^2)
+SS_xy = sum((y - y_bar) * (x - x_bar))
+SS_xx = sum((x - x_bar)^2)
+
+beta1_hat = SS_xy / SS_xx
+beta0_hat = y_bar - beta1_hat * x_bar
+
+cat(
+  sprintf("R built-in function\n"),
+  sprintf("==================\n"),
+  sprintf("intercept = %f, slope = %f\n", beta0, beta1),
+  
+  sprintf("\nComputed result\n"),
+  sprintf("===============\n"),
+  sprintf("beta0_hat = %f, beta1_hat = %f", beta0_hat, beta1_hat)
+)
+```
+
+## (c)
+
+```{r result='hold'}
+alpha = 0.05
+n = length(x)
+
+sse = SS_yy - beta1_hat * SS_xy
+ss = sse / (n - 2)
+se_beta1 = sqrt(ss / SS_xx)
+se_beta0 = sqrt((1/n + x_bar^2/SS_xx) * ss)
+
+# two-sided CI
+tcrit = qt(1 - alpha/2, df = n - 2)
+
+beta0_ci_upper = beta0_hat + tcrit * se_beta0
+beta0_ci_lower = beta0_hat - tcrit * se_beta0
+
+beta1_ci_upper = beta1_hat + tcrit * se_beta1
+beta1_ci_lower = beta1_hat - tcrit * se_beta1
+
+cat(
+  sprintf("handcrafted CIs\n"),
+  sprintf("===============\n"),
+  sprintf("            2.5%%      97.5%%\n"),
+  sprintf("beta0: %f, %f\n", beta0_ci_lower, beta0_ci_upper),
+  sprintf("beta1: %f, %f\n", beta1_ci_lower, beta1_ci_upper),
+  
+  sprintf("\n\nbuilt-in function\n"),
+  sprintf("=================\n")
+)
+confint(fit)
+```
+
+## (d)
+
+```{r results='hold'}
+t = beta1_hat / se_beta1
+tcrit = qt(1 - alpha, df = n-2)
+sprintf("test stats: %f, t-criteria: %f\n", t, tcrit)
+if (t > tcrit) {
+  cat(
+    sprintf("Since t > tcrit, the test stats does not lie within the confidence\n"),
+    sprintf("region, so we reject H0; there is no positive correlation between\n"),
+    sprintf("two variables.\n")
+  )
+} else {
+  cat(
+    sprintf("Since t <= tcrit, the test stats does lie within the confidence\n"),
+    sprintf("region, so we accept H0; there is a positive correlation between\n"),
+    sprintf("two variables.\n")
+  )
+}
+
+p_val = 2 * pt(t, df = n-2, lower.tail = FALSE)
+sprintf("the p value is given by: %f", p_val)
+```
+
+## (e)
+
+```{r results='hold'}
+tt = 0.1 / se_beta1
+p = 2 * (1 - pt(tt, df = n-2))
+sprintf("the probability is: %f", p)
 ```
