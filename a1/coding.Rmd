@@ -206,7 +206,7 @@ confint(fit)
 
 **Interpretation:**
 
--   For $\beta_1$: On every increment of the mother's IQ scores, the average response of the children's test scores is increased by between 0.4949534 and 0.7249957 on average.
+-   For $\beta_1$: On every increment of the mother's IQ scores, the average response of the children's test scores is increased by between 0.4949534 and 0.7249957 on average. However, in the real world practice, having a IQ score of 0 is meaningless, the interpretation is therefore a theoretical baseline under the scene of statistics study, instead of an important quantity.
 
 -   For $\beta_0$: When the mother's IQ scores is zero, the children's test scores are expected to between 14.1692789 and 37.4302768.
 
@@ -216,24 +216,15 @@ confint(fit)
 
 ```{r results='hold'}
 t = beta1_hat / se_beta1
-tcrit = qt(1 - alpha, df = n-2)
-sprintf("test stats: %f, t-criteria: %f\n", t, tcrit)
+tcrit = qt(0.975, df = n-2)
+cat(sprintf("test stat: %f, the one-sided critical t is given by: %f\n", t, tcrit))
 if (t > tcrit) {
-  cat(
-    sprintf("Since t > tcrit, the test stats does not lie within the confidence\n"),
-    sprintf("region, so we reject H0; there is no positive correlation between\n"),
-    sprintf("two variables.\n")
-  )
+  cat("We reject H0. Evidence suggests a positive association.\n")
 } else {
-  cat(
-    sprintf("Since t <= tcrit, the test stats does lie within the confidence\n"),
-    sprintf("region, so we accept H0; there is a positive correlation between\n"),
-    sprintf("two variables.\n")
-  )
+  cat("We fail to reject H0. Insufficient evidence of a positive association at this alpha.\n")
 }
-
-p_val = 2 * pt(t, df = n-2, lower.tail = FALSE)
-sprintf("the p value is given by: %f", p_val)
+p_val <- 1 - pt(t, df = n-2)
+cat(sprintf("p-value is given by: %f\n", p_val))
 ```
 
 ## (e)
