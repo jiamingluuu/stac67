@@ -165,6 +165,12 @@ cat(
 )
 ```
 
+**Interpretation:**
+
+-   $\hat{\beta_0} = 25.799778$ implies, in theoretical speaking, the children's test scores is 25.799778 when their mother's IQ scores is 0.
+
+-   $\hat{\beta_1} = 0.609975$ implies that children's test scores are positively correlated with their mother's IQ scores – every increment in the one unit of their mother's IQ scores will result in a raise of 0.6009975 on children's test scores.
+
 ## (c)
 
 ```{r result='hold'}
@@ -197,6 +203,14 @@ cat(
 )
 confint(fit)
 ```
+
+**Interpretation:**
+
+-   For $\beta_1$: On every increment of the mother's IQ scores, the average response of the children's test scores is increased by between 0.4949534 and 0.7249957 on average.
+
+-   For $\beta_0$: When the mother's IQ scores is zero, the children's test scores are expected to between 14.1692789 and 37.4302768.
+
+-   For the constructed confidence intervals: When the procedure of random sampling is performed under the same population, 95% of the constructed intervals are going to contains the true parameter $\beta_0$ and $\beta_1$.
 
 ## (d)
 
