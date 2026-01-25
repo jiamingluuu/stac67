@@ -216,7 +216,7 @@ confint(fit)
 
 ```{r results='hold'}
 t = beta1_hat / se_beta1
-tcrit = qt(0.975, df = n-2)
+tcrit = qt(0.95, df = n-2)
 cat(sprintf("test stat: %f, the one-sided critical t is given by: %f\n", t, tcrit))
 if (t > tcrit) {
   cat("We reject H0. Evidence suggests a positive association.\n")
